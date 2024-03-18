@@ -56,7 +56,7 @@ vector<arey> Packing::pack(const pairii& plate, const vector<pairii>& vec,  vect
     {
         int min = plate.first;
         arey minarey{ {-1,-1},{-1,-1} };
-        for (auto j = mapxy.begin(); j != mapxy.end() && (j->first+it.second)<min; j++)
+        for (auto j = mapxy.begin(); j != mapxy.end() ; j++)
         {
             if (check({ j->first,j->second }, it))
             {
