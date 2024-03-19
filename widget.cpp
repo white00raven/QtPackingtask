@@ -9,19 +9,22 @@ Widget::Widget(QWidget *parent)
     QLabel *lab5=new QLabel("Ввод целыми в одной ед.из. ");
      QLabel *lab6=new QLabel("Разметка с шагом в 10 ");
     QLabel *lab1=new QLabel("Введите размер листа");
-   table1=new QTableWidget(1,2);
+    linef=new QLineEdit;
+    lines=new QLineEdit;
+
     QLabel *lab2=new QLabel("Введите размер деталей");
-    table2=new QTableWidget(countrow,2);
+    table=new QTableWidget(countrow,2);
     QLabel *lab3=new QLabel("Вывод вставленных деталей");
     text1=new QTextEdit;
     text1->setReadOnly(true);
     QLabel *lab4=new QLabel("Вывод не вставленных деталей");
      text2=new QTextEdit;
      text2->setReadOnly(true);
-    table1->setMaximumSize(230,80);
+    linef->setMaximumSize(230,20);
+    lines->setMaximumSize(230,20);
     text1->setMaximumSize(230,100);
     text2->setMaximumSize(230,100);
-    table2->setMaximumSize(230,100);
+    table->setMaximumSize(230,100);
     QVBoxLayout *box=new QVBoxLayout;
 
     QPushButton *button=new QPushButton;
@@ -29,9 +32,10 @@ Widget::Widget(QWidget *parent)
      box->addWidget(lab5);
      box->addWidget(lab6);
      box->addWidget(lab1);
-     box->addWidget(table1);
+     box->addWidget(linef);
+     box->addWidget(lines);
      box->addWidget(lab2);
-     box->addWidget(table2);
+     box->addWidget(table);
      box->addWidget(lab3);
      box->addWidget(text1);
      box->addWidget(lab4);
@@ -78,20 +82,20 @@ void Widget::slot()
     std::vector<pairii>in,out;
     pairii plate;
     QString str1="",str2="";
-    if(table1->item(0,0)==0 || table1->item(0,1)==0)
-        return;
-    str1=table1->item(0,0)->text();
-    str2=table1->item(0,1)->text();
 
+    str1=linef->text();
+    str2=lines->text();
+    if(str1.size()==0 || str2.size()==0)
+        return;
     int fir=str1.toInt(),sec=str2.toInt();
     plate={max(fir,sec),min(fir,sec)};
 
     for(int i=0;i<countrow;i++)
     {
-        if(table2->item(i,0)==0 || table2->item(i,1)==0)
+        if(table->item(i,0)==0 || table->item(i,1)==0)
             break;
-        str1=table2->item(i,0)->text();
-        str2=table2->item(i,1)->text();
+        str1=table->item(i,0)->text();
+        str2=table->item(i,1)->text();
 
          fir=str1.toInt(),sec=str2.toInt();
          if (min(fir,sec)<=0 || min(fir,sec) > plate.second || max(fir,sec)>plate.first)

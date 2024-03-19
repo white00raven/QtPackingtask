@@ -17,7 +17,8 @@ public:
 protected:
 virtual void paintEvent(QPaintEvent*)override;
 private:
-    QTableWidget *table1,*table2;
+    QLineEdit *linef,*lines;
+    QTableWidget *table;
     QTextEdit *text1,*text2;
     std::vector<arey>vec;
     int countrow=100;
