@@ -6,38 +6,36 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-    QLabel *lab=new QLabel("Ввод в формате size1,size2,size1,... ");
-    QLabel *lab5=new QLabel("Ввод целыми в одной ед.из. без пробелов ");
+    QLabel *lab5=new QLabel("Ввод целыми в одной ед.из. ");
      QLabel *lab6=new QLabel("Разметка с шагом в 10 ");
     QLabel *lab1=new QLabel("Введите размер листа");
-    line=new QLineEdit;
+   table1=new QTableWidget(1,2);
     QLabel *lab2=new QLabel("Введите размер деталей");
-    text1=new QTextEdit;
+    table2=new QTableWidget(countrow,2);
     QLabel *lab3=new QLabel("Вывод вставленных деталей");
-    text2=new QTextEdit;
-    text2->setReadOnly(true);
+    text1=new QTextEdit;
+    text1->setReadOnly(true);
     QLabel *lab4=new QLabel("Вывод не вставленных деталей");
-     text3=new QTextEdit;
-     text3->setReadOnly(true);
-    line->setMaximumSize(200,20);
-    text1->setMaximumSize(200,100);
-    text2->setMaximumSize(200,100);
-    text3->setMaximumSize(200,100);
+     text2=new QTextEdit;
+     text2->setReadOnly(true);
+    table1->setMaximumSize(230,80);
+    text1->setMaximumSize(230,100);
+    text2->setMaximumSize(230,100);
+    table2->setMaximumSize(230,100);
     QVBoxLayout *box=new QVBoxLayout;
 
     QPushButton *button=new QPushButton;
      QWidget::connect(button,&QPushButton::clicked,this,&Widget::slot);
-     box->addWidget(lab);
      box->addWidget(lab5);
      box->addWidget(lab6);
      box->addWidget(lab1);
-     box->addWidget(line);
+     box->addWidget(table1);
      box->addWidget(lab2);
-     box->addWidget(text1);
+     box->addWidget(table2);
      box->addWidget(lab3);
-     box->addWidget(text2);
+     box->addWidget(text1);
      box->addWidget(lab4);
-     box->addWidget(text3);
+     box->addWidget(text2);
      box->addWidget(button);
 
      box->setAlignment(Qt::AlignTop);
@@ -61,15 +59,15 @@ void Widget::paintEvent(QPaintEvent *event)
         painter.setPen(QPen(Qt::red));
         for(int i=10;i<it->size.first;i+=10)
         {
-           painter.drawLine(230+i,20,230+i,20+it->size.second);
+           painter.drawLine(250+i,20,250+i,20+it->size.second);
         }
         for(int i=10;i<it->size.second;i+=10)
         {
-            painter.drawLine(230,20+i,230+it->size.first,20+i);
+            painter.drawLine(250,20+i,250+it->size.first,20+i);
         }
         painter.setPen(QPen(Qt::black,3));
         for(auto it:vec)
-            painter.drawRect(230+it.xy.first,20+it.xy.second,it.size.first,it.size.second);
+            painter.drawRect(250+it.xy.first,20+it.xy.second,it.size.first,it.size.second);
     }
 QWidget::paintEvent(event);
 
@@ -77,124 +75,59 @@ QWidget::paintEvent(event);
 
 void Widget::slot()
 {
-
-
-    std::vector<int> v;
-    std::vector<pairii>vecin,in,out;
+    std::vector<pairii>in,out;
     pairii plate;
-    QString str=line->text(),st="";
-    if(str.size()==0)
+    QString str1="",str2="";
+    if(table1->item(0,0)==0 || table1->item(0,1)==0)
         return;
-    for(int i=0;i<str.size();i++)
+    str1=table1->item(0,0)->text();
+    str2=table1->item(0,1)->text();
+
+    int fir=str1.toInt(),sec=str2.toInt();
+    plate={max(fir,sec),min(fir,sec)};
+
+    for(int i=0;i<countrow;i++)
     {
-        if((str[i]>='0'&&str[i]<='9' )||str[i]==',')
-        {
+        if(table2->item(i,0)==0 || table2->item(i,1)==0)
+            break;
+        str1=table2->item(i,0)->text();
+        str2=table2->item(i,1)->text();
 
-            if(str[i]==',')
-        {
-            v.push_back(st.toInt());
-            st="";
-        }
-        else
-        {
-            st+=str[i];
-        }
-        }
-        else
-        {
-            return;
-        }
+         fir=str1.toInt(),sec=str2.toInt();
+         if (min(fir,sec)<=0 || min(fir,sec) > plate.second || max(fir,sec)>plate.first)
+         {
+             out.push_back({fir,sec});
+         }
+         else
+         {
+             in.push_back({max(fir,sec),min(fir,sec)});
+         }
     }
-
-    if(st.size()>0)
-    {
-        v.push_back(st.toInt());
-    }
-
-
-    if((v.size()%2))
-    {
-        return;
-    }
-    plate={max(v[0],v[1]),min(v[0],v[1])};
-    v.clear();
-
-    str=text1->toPlainText();
-    st="";
-    for(int i=0;i<str.size();i++)
-    {
-        if((str[i]>='0'&&str[i]<='9' )||str[i]==',')
-        {
-
-            if(str[i]==',')
-        {
-            v.push_back(st.toInt());
-            st="";
-        }
-        else
-        {
-            st+=str[i];
-        }
-        }
-        else
-        {
-            return;
-        }
-    }
-
-    if(st.size()>0)
-    {
-        v.push_back(st.toInt());
-    }
-
-
-    if((v.size()%2))
-    {
-        return;
-    }
-
-    for(int i=0;i<v.size();i++)
-    {
-
-        int fir=v[i],sec=v[++i];
-        vecin.push_back({max(fir,sec),min(fir,sec)});
-    }
-    for (auto it: vecin)
-        {
-            if (it.second<=0 || it.second > plate.second || it.first>plate.first)
-            {
-                out.push_back(it);
-            }
-            else
-            {
-                in.push_back(it);
-            }
-        }
         sort(in.begin(), in.end(), [](const pairii& r1, const pairii& r2)
             {
                 return r1.first == r2.first ? r1.second > r2.second:r1.first > r2.first;
              });
         Packing p(plate);
          vec=p.pack(plate, in, out);
-         str="";
+         str1="";
          for(auto it:vec)
          {
-         str+=QString::number(it.size.first);
-         str+=",";
-         str+=QString::number(it.size.second);
-         str+=",";
+         str1+=QString::number(it.size.first);
+         str1+=",";
+         str1+=QString::number(it.size.second);
+         str1+=",";
          }
-         text2->setText(str);
+         text1->setText(str1);
          vec.push_back({{plate.first,plate.second},{0,0}});
-        str="";
+        str1="";
         for(auto it:out)
         {
-        str+=QString::number(it.first);
-        str+=",";
-        str+=QString::number(it.second);
-        str+=",";
+        str1+=QString::number(it.first);
+        str1+=",";
+        str1+=QString::number(it.second);
+        str1+=",";
         }
-         text3->setText(str);
-         this->resize(230+plate.first,20+ plate.second);
+         text2->setText(str1);
+         this->resize(250+plate.first,20+ plate.second);
     this->update();
 }

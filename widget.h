@@ -6,9 +6,6 @@
 #include <QTextEdit>
 #include <QtWidgets>
 #include "Packing.h"
-QT_BEGIN_NAMESPACE
-namespace Ui { class Widget; }
-QT_END_NAMESPACE
 
 class Widget : public QWidget
 {
@@ -20,9 +17,10 @@ public:
 protected:
 virtual void paintEvent(QPaintEvent*)override;
 private:
-    QLineEdit* line;
-    QTextEdit *text1,*text2,*text3;
+    QTableWidget *table1,*table2;
+    QTextEdit *text1,*text2;
     std::vector<arey>vec;
+    int countrow=100;
 public slots:
     void slot();
 };
