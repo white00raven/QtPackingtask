@@ -181,7 +181,7 @@ void Packing::insert(const arey& ar)
        
         if (it->first + it->second.begin()->second.second == (ar.xy.second + ar.size.second)) {
             
-            for (auto i = it->second.find(ar.xy.first); i != it->second.end() && (i->first + i->second.first) < (ar.xy.first + ar.size.first); i++)
+            for (auto i = it->second.find(ar.xy.first); i != it->second.end() && (i->first + i->second.first) <= (ar.xy.first + ar.size.first); i++)
             {
                
                 vecdel.push_back({ it->first,i->first });

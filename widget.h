@@ -17,12 +17,12 @@ public:
 protected:
 virtual void paintEvent(QPaintEvent*)override;
 private:
-    QLineEdit *linef,*lines;
+    QLineEdit *linef,*lines ,*linecou;
     QTableWidget *table;
     QTextEdit *text1,*text2;
     std::vector<arey>vec;
-    int countrow=100;
 public slots:
     void slot();
+    void setcount();
 };
 #endif // WIDGET_H

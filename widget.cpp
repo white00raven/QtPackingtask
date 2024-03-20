@@ -11,9 +11,12 @@ Widget::Widget(QWidget *parent)
     QLabel *lab1=new QLabel("Введите размер листа");
     linef=new QLineEdit;
     lines=new QLineEdit;
-
+    QLabel *lab7=new QLabel("Введите количество деталей");
+    linecou=new QLineEdit;
+     QPushButton *button2=new QPushButton("ввод");
+      QWidget::connect(button2,&QPushButton::clicked,this,&Widget::setcount);
     QLabel *lab2=new QLabel("Введите размер деталей");
-    table=new QTableWidget(countrow,2);
+    table=new QTableWidget(0,2);
     QLabel *lab3=new QLabel("Вывод вставленных деталей");
     text1=new QTextEdit;
     text1->setReadOnly(true);
@@ -22,18 +25,22 @@ Widget::Widget(QWidget *parent)
      text2->setReadOnly(true);
     linef->setMaximumSize(230,20);
     lines->setMaximumSize(230,20);
+    linecou->setMaximumSize(230,20);
     text1->setMaximumSize(230,100);
     text2->setMaximumSize(230,100);
     table->setMaximumSize(230,100);
     QVBoxLayout *box=new QVBoxLayout;
 
-    QPushButton *button=new QPushButton;
+    QPushButton *button=new QPushButton("Старт");
      QWidget::connect(button,&QPushButton::clicked,this,&Widget::slot);
      box->addWidget(lab5);
      box->addWidget(lab6);
      box->addWidget(lab1);
      box->addWidget(linef);
      box->addWidget(lines);
+     box->addWidget(lab7);
+     box->addWidget(linecou);
+     box->addWidget(button2);
      box->addWidget(lab2);
      box->addWidget(table);
      box->addWidget(lab3);
@@ -87,10 +94,10 @@ void Widget::slot()
     str2=lines->text();
     if(str1.size()==0 || str2.size()==0)
         return;
-    int fir=str1.toInt(),sec=str2.toInt();
+    int fir=str1.toUInt(),sec=str2.toUInt();
     plate={max(fir,sec),min(fir,sec)};
 
-    for(int i=0;i<countrow;i++)
+    for(int i=0;i<table->rowCount();i++)
     {
         if(table->item(i,0)==0 || table->item(i,1)==0)
             break;
@@ -116,9 +123,11 @@ void Widget::slot()
          str1="";
          for(auto it:vec)
          {
+         str1+="(";
          str1+=QString::number(it.size.first);
          str1+=",";
          str1+=QString::number(it.size.second);
+         str1+=")";
          str1+=",";
          }
          text1->setText(str1);
@@ -126,12 +135,23 @@ void Widget::slot()
         str1="";
         for(auto it:out)
         {
+            str1+="(";
         str1+=QString::number(it.first);
         str1+=",";
         str1+=QString::number(it.second);
+        str1+=")";
         str1+=",";
         }
          text2->setText(str1);
          this->resize(250+plate.first,20+ plate.second);
     this->update();
+}
+
+void Widget::setcount()
+{
+    QString str=linecou->text();
+    if(str.size()>0)
+    {
+        table->setRowCount(str.toUInt());
+    }
 }
