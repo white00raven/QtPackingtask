@@ -153,6 +153,7 @@ void Widget::slot()
         str1+=",";
         }
          text2->setText(str1);
+         this->showNormal();
          this->resize(270+plate.first,20+ plate.second);
     this->update();
 }
