@@ -54,25 +54,42 @@ vector<arey> Packing::pack(const pairii& plate, const vector<pairii>& vec,  vect
     vector<arey> ret;
     for (auto it : vec)
     {
-        int min = plate.first;
+        int minx = plate.first,miny=plate.second;
         arey minarey{ {-1,-1},{-1,-1} };
         for (auto j = mapxy.begin(); j != mapxy.end() ; j++)
         {
             if (check({ j->first,j->second }, it))
             {
-                if ((j->first + it.first) < min)
+                if ((j->first + it.first) < minx)
                 {
-                    min = j->first + it.first;
+                    minx = j->first + it.first;
+                    miny = j->second + it.second;
                     minarey = arey{ it, {j->first,j->second } };
+                }
+                else 
+                {
+                    if ((j->first + it.first) == minx && (j->second + it.second) < miny)
+                    {
+                        miny = j->second + it.second;
+                        minarey = arey{ it, {j->first,j->second } };
+                    }
                 }
             }
             if (it.second != it.first&&check({ j->first,j->second }, { it.second,it.first }))
             {
-                if ((j->first + it.second) < min)
+                if ((j->first + it.second) < minx)
                 {
-                    min = j->first + it.second;
-
+                    minx = j->first + it.second;
+                    miny = j->second + it.first;
                     minarey = arey{ {it.second,it.first}, {j->first,j->second } };
+                }
+                else 
+                {
+                    if ((j->first + it.second) == minx && (j->second + it.first) < miny)
+                    {
+                        miny = j->second + it.first;
+                        minarey = arey{ {it.second,it.first}, {j->first,j->second } };
+                    }
                 }
             }
 
